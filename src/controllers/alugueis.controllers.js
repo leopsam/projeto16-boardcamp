@@ -4,11 +4,11 @@ import dayjs from 'dayjs'
 let data = dayjs().format("YYYY-MM-DD")
 
 export async function criarAluguel(req, res) {
-  console.log("criando aluguel")
-  console.log(data)
+  const games = await db.query("SELECT * FROM games")
+
   const { customerId, gameId, daysRented } = req.body
   const rentDate = data
-  const originalPrice = daysRented * 1500
+  const originalPrice = daysRented * games.rows[gameId-1].pricePerDay
   const returnDate = null
   const delayFee = null
 
@@ -17,7 +17,7 @@ export async function criarAluguel(req, res) {
   //if (isNaN(Number(cpf))) return res.sendStatus(400)
 
   
-  const games = await db.query("SELECT * FROM games")
+  
   console.log(games.rows[gameId-1].stockTotal)
   
   if(!games.rows[gameId-1]) return res.sendStatus(400)
