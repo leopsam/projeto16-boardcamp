@@ -19,6 +19,14 @@ export async function criarCliente(req, res) {
 
   if (cpf.length != 11) return res.sendStatus(400)
 
+  const arrayCpf = cpf.split('')
+
+  arrayCpf.map((c) => {
+    if (c.cpf != "1") {
+      console.log("erro da letera")
+      return res.sendStatus(400)
+    }
+  })
 
   const namesClientes = await db.query("SELECT cpf FROM customers")
   const arrayNames = namesClientes.rows
