@@ -13,34 +13,15 @@ export async function buscarJogos(req, res) {
 
 export async function criarJogo(req, res) {
   console.log("criar jogo")
-  const { name, image, stocktotal, pricePerDay } = req.body
+  const { name, image, stockTotal, pricePerDay } = req.body
 
-  console.log(name, image, stocktotal, pricePerDay)  
+  console.log(name, image, stockTotal, pricePerDay)  
 
   try {
-    //const jogo = await db.query(`INSERT INTO games (name, image, stocktotal, pricePerDay) VALUES ($1, $2, $3, $4);`, [name, image, stocktotal, pricePerDay])
-
-    const jogo = await db.query(`
-    INSERT INTO games (name, image, stocktotal, pricePerDay)
-    VALUES ($1, $2, $3, $4);`
-      , [name, image, stocktotal, pricePerDay])
-
-    console.log(jogo)
+    const jogo = await db.query(`INSERT INTO games (name, image, "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4);`, [name, image, stockTotal, pricePerDay])
     
-    res.send(jogo).status(201)
+    res.status(201).send(jogo)
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(401).send(error.message)
   }
 }
-
-/*export async function buscarReceitaPorId(req, res) {
-  const { id } = req.params
-  try {
-    // const receita = await db.query(`SELECT * FROM receitas WHERE id = $1;`, [id])
-    const receita = await db.query(`SELECT * FROM receitas WHERE id = ${id}`)
-
-    res.send(receita.rows[0])
-  } catch (error) {
-    res.status(500).send(error.message)
-  }
-}*/
