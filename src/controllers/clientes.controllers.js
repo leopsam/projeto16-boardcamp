@@ -17,17 +17,24 @@ export async function criarCliente(req, res) {
 
   console.log(name, phone, cpf, birthday) //tirar depois
 
+  console.log(Number(cpf))
+
   if (cpf.length != 11) return res.sendStatus(400)
+  if (isNaN(Number(cpf))) return res.sendStatus(400)
 
+
+/*
   const arrayCpf = cpf.split('')
+  console.log(arrayCpf)
 
-  arrayCpf.map((c) => {
-    if (c.cpf != "1") {
-      console.log("erro da letera")
-      return res.sendStatus(400)
+  for(let i = 0; arrayCpf.length < i; i++){
+    console.log(arrayCpf[i])
+    if (arrayCpf[i] != 1 || arrayCpf[i] != "2" || arrayCpf[i] != "3" || arrayCpf[i] != "4" || arrayCpf[i] != "5" || arrayCpf[i] != "6" || arrayCpf[i] != "7" || arrayCpf[i] != "8" || arrayCpf[i] != "9" || arrayCpf[i] != "0"){
+      console.log(arrayCpf[i])
+      return res.sendStatus(401)
     }
-  })
-
+  }
+*/
   const namesClientes = await db.query("SELECT cpf FROM customers")
   const arrayNames = namesClientes.rows
   arrayNames.map((c) => {
