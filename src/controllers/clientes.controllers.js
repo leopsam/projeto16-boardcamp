@@ -11,23 +11,28 @@ export async function buscarJogos(req, res) {
   }
 }
 
-export async function criarJogo(req, res) {
-  console.log("criar jogo")
-  const { name, image, stocktotal, pricePerDay } = req.body
+export async function criarCliente(req, res) {
+  console.log("criar cliente")
+  const { name, phone, cpf, birthday } = req.body
 
-  console.log(name, image, stocktotal, pricePerDay)  
+
+  console.log(name, phone, cpf, birthday)
+
+  
 
   try {
-    //const jogo = await db.query(`INSERT INTO games (name, image, stocktotal, pricePerDay) VALUES ($1, $2, $3, $4);`, [name, image, stocktotal, pricePerDay])
+    console.log("criar cliente 2")
+    //const cliente = await db.query(`INSERT INTO customers (name, phone, cpf, birthday)) VALUES (name, phone, cpf, birthday);`)
 
-    const jogo = await db.query(`
-    INSERT INTO games (name, image, stocktotal, pricePerDay)
+    const cliente = await db.query(`
+    INSERT INTO customers (name, phone, cpf, birthday)
     VALUES ($1, $2, $3, $4);`
-      , [name, image, stocktotal, pricePerDay])
+      , [name, phone, cpf, birthday])
 
-    console.log(jogo)
+
+    console.log(cliente)
     
-    res.send(jogo).status(201)
+    res.send(cliente).status(201)
   } catch (error) {
     res.status(400).send(error.message)
   }

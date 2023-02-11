@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import jogos from "./routers/jogos.routers.js"
+import clientes from "./routers/clientes.routers.js"
 
 dotenv.config();
 
@@ -9,7 +10,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
-app.use([jogos])
+app.use([jogos, clientes])
 
 const port = process.env.PORT || 5000;
 
