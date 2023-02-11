@@ -43,7 +43,22 @@ export async function buscarClientePorId(req, res) {
   try {
     const cliente = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
 
+    if (cliente.rows.length === 0){
+      return res.sendStatus(404)
+    } 
+
+    res.status(200).send(cliente.rows);
+  } catch (error) {
+    res.status(404).send(error.message)
+  }
+}
+
+export async function atualizarCliente(req, res) {
+  const { id } = req.params
+  try {
+    const cliente = await db.query(`UPDATE customers SET senh='010101' WHERE id = $1;`, [id]);
     if (!cliente) return res.sendStatus(404)
+
 
     res.status(200).send(cliente.rows[0]);
   } catch (error) {
