@@ -39,15 +39,16 @@ export async function criarAluguel(req, res) {
   }
 }
 
-/*
-export async function buscarCliente(req, res) {
+export async function buscarAlugueis(req, res) {
   try {
-    const cliente = await db.query("SELECT * FROM customers")
-    res.send(cliente.rows)
+    const alugueis = await db.query("SELECT * FROM rentals")
+    res.send(alugueis.rows)
   } catch (error) {
     res.status(500).send(error.message)
   }
 }
+
+/*
 
 export async function buscarClientePorId(req, res) {
   const { id } = req.params
