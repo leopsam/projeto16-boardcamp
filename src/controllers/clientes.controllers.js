@@ -37,3 +37,16 @@ export async function criarCliente(req, res) {
     res.send(error.message).status(400)
   }
 }
+
+export async function buscarClientePorId(req, res) {
+  const { id } = req.params
+  try {
+    const cliente = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
+
+    if (cliente) return res.sendStatus(404)
+
+    res.send(cliente.rows[0]);
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+}
