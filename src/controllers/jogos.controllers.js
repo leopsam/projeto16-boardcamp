@@ -20,8 +20,8 @@ export async function criarJogo(req, res) {
   try {
     const jogo = await db.query(`INSERT INTO games (name, image, "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4);`, [name, image, stockTotal, pricePerDay])
     
-    res.status(201).send(jogo)
+    res.sendStatus(201)
   } catch (error) {
-    res.status(401).send(error.message)
+    res.status(400).send(error.message)
   }
 }
