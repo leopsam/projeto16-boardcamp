@@ -20,10 +20,10 @@ export async function criarJogo(req, res) {
     INSERT INTO games (name, image, stockTotal, pricePerDay) VALUES ($1, $2, $3, $4);`, [name, image, stockTotal, pricePerDay])
 
     console.log(jogo)
-
-    res.send(201)
+    
+    res.send(jogo).status(201)
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(400).send(error.message)
   }
 }
 
