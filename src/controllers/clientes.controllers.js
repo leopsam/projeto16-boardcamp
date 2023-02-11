@@ -46,8 +46,22 @@ export async function buscarClientePorId(req, res) {
     if (cliente.rows.length === 0){
       return res.sendStatus(404)
     } 
+    let data = new Date(cliente.rows[0].birthday);
+    let dataFormatada = (data.getFullYear() + "-" + ((data.getMonth() + 1)) + "-" + (data.getDate() )) ;                 
+    
+    let arrayClient = [
+        {
+          id: cliente.rows[0].id, 
+          name: cliente.rows[0].name,
+          phone: cliente.rows[0].phone, 
+          cpf: cliente.rows[0].cpf, 
+          birthday: dataFormatada
+        }
+    ]
 
-    res.status(200).send(cliente.rows);
+    console.log(arrayClient[0]) //tirar depois
+
+    res.status(200).send(arrayClient[0]);
   } catch (error) {
     res.status(404).send(error.message)
   }
