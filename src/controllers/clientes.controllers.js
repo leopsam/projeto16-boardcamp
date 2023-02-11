@@ -17,14 +17,28 @@ export async function criarCliente(req, res) {
 
   console.log(name, phone, cpf, birthday) //tirar depois
 
+  if (name == "") return res.sendStatus(400)
+
+
+  const namesClientes = await db.query("SELECT cpf FROM customers")
+  const arrayNames = namesClientes.rows
+
+  arrayNames.map((c) => {
+    //console.log(n.name)
+    if (c.cpf === cpf) return res.sendStatus(409)
+  })
+
+  //console.log(arrayNames) //tirar depois
+
+
+    //if (namesClientes === name) return res.status(401).send("Você não fez login")
+
   try {   
-    const cliente = await db.query(`
+    await db.query(`
     INSERT INTO customers (name, phone, cpf, birthday)
     VALUES ($1, $2, $3, $4);`
       , [name, phone, cpf, birthday])
 
-    console.log(cliente) //tirar depois
-    
     res.sendStatus(201)
   } catch (error) {
     res.send(error.message).status(400)
