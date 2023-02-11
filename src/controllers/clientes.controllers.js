@@ -17,7 +17,7 @@ export async function criarCliente(req, res) {
 
   console.log(name, phone, cpf, birthday) //tirar depois
 
-  //if (name === "") return res.sendStatus(400)
+  if (cpf.length != 11) return res.sendStatus(400)
 
 
   const namesClientes = await db.query("SELECT cpf FROM customers")
