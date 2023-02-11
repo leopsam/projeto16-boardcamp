@@ -68,9 +68,23 @@ export async function buscarClientePorId(req, res) {
 }
 
 export async function atualizarCliente(req, res) {
+  console.log("atualizar Cliente") //tirar depois
   const { id } = req.params
+  const { name, phone, cpf, birthday } = req.body
+
+  console.log(Number(cpf))
+
+  if (cpf.length != 11) return res.sendStatus(400)
+  if (isNaN(Number(cpf))) return res.sendStatus(400)
+
+  const namesClientes = await db.query("SELECT cpf FROM customers")
+  const arrayNames = namesClientes.rows
+  arrayNames.map((c) => {
+    if (c.cpf === cpf) return res.sendStatus(409)
+  })
+
   try {
-    const cliente = await db.query(`UPDATE customers SET senh='010101' WHERE id = $1;`, [id]);
+    const cliente = await db.query(`UPDATE Customers SET name = '${name}', phone = '${phone}', cpf = '${cpf}', birthday = '${birthday}' WHERE id = $1;`, [id]);
     if (!cliente) return res.sendStatus(404)
 
 
