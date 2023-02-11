@@ -16,13 +16,20 @@ export async function criarAluguel(req, res) {
   //if (cpf.length != 11) return res.sendStatus(400)
   //if (isNaN(Number(cpf))) return res.sendStatus(400)
 
-  /*
-  const cpfsClientes = await db.query("SELECT cpf FROM customers")
+  
+  const games = await db.query("SELECT * FROM games")
+  console.log(games.rows[gameId-1].stockTotal)
+  
+  if(!games.rows[gameId-1]) return res.sendStatus(400)
+  if(games.rows[gameId-1].stockTotal === 0) return res.sendStatus(400)
+
+/*
   const arrayCpfs = cpfsClientes.rows
   arrayCpfs.map((c) => {
     if (c.cpf === cpf) return res.sendStatus(409)
   })
 */
+
   try {   
     await db.query(`INSERT INTO rentals ("customerId", "gameId", "daysRented", "rentDate", "originalPrice", "returnDate", "delayFee") 
     VALUES ($1, $2, $3, $4, $5, $6, $7);`, [customerId, gameId, daysRented, rentDate, originalPrice, returnDate, delayFee])
