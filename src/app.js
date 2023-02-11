@@ -1,14 +1,18 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import routers from "./routers/index.routers.js";
+import jogos from "./routers/jogos.routers.js"
 
 dotenv.config();
 
-const server = express();
-server.use(cors());
-server.use(express.json());
-server.use(routers);
+const app = express()
+app.use(express.json())
+app.use(cors())
+
+app.use([jogos])
 
 const port = process.env.PORT || 5000;
-server.listen(port, () => console.log(`Servidor rodando na porta: ${port}`));
+
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta: ${port}`)
+});

@@ -12,6 +12,7 @@ export async function buscarJogos(req, res) {
 }
 
 export async function criarJogo(req, res) {
+  console.log("criar jogo")
   const { name, image, stockTotal, pricePerDay } = req.body
   
   try {
