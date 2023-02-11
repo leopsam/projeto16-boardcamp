@@ -3,35 +3,26 @@ import { db } from '../database/database.connection.js'
 export async function buscarCliente(req, res) {
   try {
     const cliente = await db.query("SELECT * FROM customers")
-
     res.send(cliente.rows)
-
   } catch (error) {
     res.status(500).send(error.message)
   }
 }
 
 export async function criarCliente(req, res) {
-  console.log("criar cliente") //tirar depois
   const { name, phone, cpf, birthday } = req.body
-
-  console.log(Number(cpf))
 
   if (cpf.length != 11) return res.sendStatus(400)
   if (isNaN(Number(cpf))) return res.sendStatus(400)
 
-  const namesClientes = await db.query("SELECT cpf FROM customers")
-  const arrayNames = namesClientes.rows
-  arrayNames.map((c) => {
+  const cpfsClientes = await db.query("SELECT cpf FROM customers")
+  const arrayCpfs = cpfsClientes.rows
+  arrayCpfs.map((c) => {
     if (c.cpf === cpf) return res.sendStatus(409)
   })
 
   try {   
-    await db.query(`
-    INSERT INTO customers (name, phone, cpf, birthday)
-    VALUES ($1, $2, $3, $4);`
-      , [name, phone, cpf, birthday])
-
+    await db.query(`INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4);`, [name, phone, cpf, birthday])
     res.sendStatus(201)
   } catch (error) {
     res.send(error.message).status(400)
@@ -59,8 +50,6 @@ export async function buscarClientePorId(req, res) {
         }
     ]
 
-    console.log(arrayClient[0]) //tirar depois
-
     res.status(200).send(arrayClient[0]);
   } catch (error) {
     res.status(404).send(error.message)
@@ -68,7 +57,6 @@ export async function buscarClientePorId(req, res) {
 }
 
 export async function atualizarCliente(req, res) {
-  console.log("atualizar Cliente") //tirar depois
   const { id } = req.params
   const { name, phone, cpf, birthday } = req.body
 
@@ -80,18 +68,15 @@ export async function atualizarCliente(req, res) {
   const clienteCpf = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
   console.log(clienteCpf.rows[0].cpf)
 
-  const namesClientes = await db.query("SELECT cpf FROM customers")
-  const arrayNames = namesClientes.rows
-  arrayNames.map((c) => {
+  const cpfsClientes = await db.query("SELECT cpf FROM customers")
+  const arrayCpfs = cpfsClientes.rows
+  arrayCpfs.map((c) => {
     if (c.cpf === cpf && cpf != clienteCpf.rows[0].cpf) return res.sendStatus(409)
-  })
-
-  
+   })  
 
   try {
     const cliente = await db.query(`UPDATE Customers SET name = '${name}', phone = '${phone}', cpf = '${cpf}', birthday = '${birthday}' WHERE id = $1;`, [id]);
     if (!cliente) return res.sendStatus(404)
-
 
     res.status(200).send(cliente.rows[0]);
   } catch (error) {
