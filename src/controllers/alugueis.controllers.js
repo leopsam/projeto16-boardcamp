@@ -146,7 +146,7 @@ export async function finalizarAluguelPorId(req, res) {
 
 
     const diaAludado = (aluguel.rows[0].rentDate.getFullYear() + "-" + ((aluguel.rows[0].rentDate.getMonth() + 1)) + "-" + (aluguel.rows[0].rentDate.getDate()))  
-    const diffInMs   = new Date(date) - new Date(diaAludado)
+    const diffInMs   = new Date(data) - new Date(diaAludado)
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);   
     let delayFee = game.rows[0].pricePerDay * diffInDays
     const diasPassados = diffInDays - aluguel.rows[0].daysRented
@@ -175,8 +175,11 @@ export async function finalizarAluguelPorId(req, res) {
     console.log(diasPassados + " dias passado")
 
     if(diaCerto < diaEntraga){
-      console.log("teste")
       delayFee = game.rows[0].pricePerDay * diasPassados
+    }
+
+    if(diasPassados <= 0){
+      delayFee = 0
     }
 
     //console.log(dataFormatadaTwo)    
