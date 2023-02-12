@@ -10,15 +10,13 @@ export async function buscarJogos(req, res) {
 }
 
 export async function criarJogo(req, res) {
-  console.log("criar jogo")
   const { name, image, stockTotal, pricePerDay } = req.body
-
-  console.log(name, image, stockTotal, pricePerDay) 
 
   if (stockTotal < 0 || pricePerDay < 0) return res.sendStatus(400)
 
   const nameGame = await db.query("SELECT name FROM games")
   const arrayGames = nameGame.rows
+
   arrayGames.map((g) => {
     if (g.name === name) return res.sendStatus(409)
   })
