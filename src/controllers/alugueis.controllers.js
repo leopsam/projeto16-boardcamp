@@ -40,9 +40,72 @@ export async function criarAluguel(req, res) {
 }
 
 export async function buscarAlugueis(req, res) {
+
+  console.log("rodou get aluguis")
+
+  //const games = await db.query("SELECT * FROM games")
+  //const customers = await db.query("SELECT * FROM customers")
+  
+
   try {
+    /*
+    
+    const resultGuests = await db.query('SELECT * FROM guests');
+    const resultRooms = await db.query('SELECT * FROM rooms');
+    const resultAllocations = await db.query('SELECT * FROM allocations');
+
+    const finalResult = resultAllocations.rows.map(allocation => ({
+      ...allocation,
+      guestName: resultGuests.rows.find(guest => guest.id === allocation.guestId).name,
+      roomName: resultRooms.rows.find(room => room.id === allocation.roomId).name,
+    }))
+
+    */
+
+    const games = await db.query("SELECT * FROM games")
+    const customers = await db.query("SELECT * FROM customers")
     const alugueis = await db.query("SELECT * FROM rentals")
-    res.send(alugueis.rows)
+
+    console.log(customers.rows.find(c => c.id === alugueis.rows[0].customerId).name)
+
+    const finalResult = alugueis.rows.map(a => ({
+        ...a,
+
+        customer: {
+          id: customers.rows.find(c => c.id === a.customerId).id,
+          Name: customers.rows.find(c => c.id === a.customerId).name
+        },
+        
+        game: {
+          id: customers.rows.find(g => g.id === a.gameId).id,
+          Name: games.rows.find(g => g.id === a.gameId).name,
+        }      
+
+    }))
+
+console.log(finalResult)
+
+
+    /*const alugueis = await db.query("SELECT * FROM rentals")
+
+    let arrayAlugalis =[]
+    alugueis.rows.map((a)=>{
+      arrayAlugalis.push(a)
+
+      let game = {} 
+      arrayAlugalis = [...game: {
+        name: a
+      }
+
+      }])
+      
+      //console.log(games.rows[a.gameId])
+      
+    })
+    console.log(games.rows[7-1])
+    //console.log(arrayAlugalis)
+    */
+    res.send(finalResult)
   } catch (error) {
     res.status(500).send(error.message)
   }
