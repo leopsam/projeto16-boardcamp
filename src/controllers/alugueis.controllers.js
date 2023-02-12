@@ -22,7 +22,7 @@ export async function criarAluguel(req, res) {
   console.log(games.rows[gameId-1].stockTotal)
   
   if(!games.rows[gameId-1]) return res.sendStatus(400)
-  if(games.rows[gameId-1].stockTotal === 0) return res.sendStatus(400)
+  if(games.rows[gameId-1].stockTotal < 0) return res.sendStatus(400)
 
 /*
   const arrayCpfs = cpfsClientes.rows
