@@ -28,7 +28,7 @@ export async function criarAluguel(req, res) {
     }
   })
   
-  if(somaStock > games.rows[gameId-1].stockTotal) return res.sendStatus(400)
+  if(somaStock >= games.rows[gameId-1].stockTotal) return res.sendStatus(400)
   
   //console.log(games.rows[gameId-1].stockTotal)
   
