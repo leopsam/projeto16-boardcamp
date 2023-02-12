@@ -129,34 +129,31 @@ console.log(finalResult)
   }
 }
 
-/*
+export async function finalizarAluguelPorId(req, res) {
+  console.log('finalizarAluguelPorId')
 
-export async function buscarClientePorId(req, res) {
   const { id } = req.params
-  try {
-    const cliente = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
+  
+    const aluguel = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
+    const delayFee = aluguel.rentDate - data
+    console.log(delayFee)
 
-    if (cliente.rows.length === 0){
+    if (aluguel.rows.length === 0){
       return res.sendStatus(404)
     } 
-    let data = new Date(cliente.rows[0].birthday);
-    let dataFormatada = (data.getFullYear() + "-" + ((data.getMonth() + 1)) + "-" + (data.getDate() )) ;                 
     
-    let arrayClient = [
-        {
-          id: cliente.rows[0].id, 
-          name: cliente.rows[0].name,
-          phone: cliente.rows[0].phone, 
-          cpf: cliente.rows[0].cpf, 
-          birthday: dataFormatada
-        }
-    ]
+    const aluguelReturno = await db.query(`UPDATE rentals SET "returnDate" = '${data}' WHERE id = $1;`, [id]);
+    if (!aluguelReturno) return res.sendStatus(404)
 
-    res.status(200).send(arrayClient[0]);
+  try {
+    res.sendStatus(200);
   } catch (error) {
     res.status(404).send(error.message)
   }
 }
+/*
+
+
 
 export async function atualizarCliente(req, res) {
   const { id } = req.params
