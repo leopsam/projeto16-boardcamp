@@ -8,7 +8,7 @@ const router = Router();
 router.get("/rentals", buscarAlugueis);
 //router.get("/customers/:id", buscarClientePorId);
 router.post("/rentals", validateSchema(AlugueiSchema), criarAluguel);
-router.post("/rentals/:id", finalizarAluguelPorId);
+router.post("/rentals/:id/return", finalizarAluguelPorId);
 //router.put("/customers/:id", validateSchema(clienteSchema), atualizarCliente);
 
 export default router;

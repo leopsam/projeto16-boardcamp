@@ -1,7 +1,7 @@
 import { db } from '../database/database.connection.js'
 import dayjs from 'dayjs'
 
-let data = dayjs().format("YYYY-MM-DD")
+let data = dayjs().format("YYYY-M-DD")
 
 export async function criarAluguel(req, res) {
   console.log(data)
@@ -135,14 +135,23 @@ export async function finalizarAluguelPorId(req, res) {
   const { id } = req.params
   
     const aluguel = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
-    const delayFee = aluguel.rentDate - data
-    console.log(delayFee)
+    const game = await db.query(`SELECT * FROM games WHERE id = $1;`, [aluguel.rows[0].gameId]);
+    
+    //console.log(data)
+    let dataFormatada = (aluguel.rows[0].rentDate.getFullYear() + "-" + ((aluguel.rows[0].rentDate.getMonth() + 1)) + "-" + (aluguel.rows[0].rentDate.getDate() ))  
+    //console.log(game.rows[0].pricePerDay)
 
+    const diffInMs   = new Date(dataFormatada) - new Date(data)
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    //console.log(diffInDays)
+    const delayFee = diffInDays * game.rows[0].pricePerDay
+
+    console.log(delayFee)
     if (aluguel.rows.length === 0){
       return res.sendStatus(404)
     } 
     
-    const aluguelReturno = await db.query(`UPDATE rentals SET "returnDate" = '${data}' WHERE id = $1;`, [id]);
+    const aluguelReturno = await db.query(`UPDATE rentals SET "returnDate" = '${data}', "delayFee" = '${delayFee}' WHERE id = $1;`, [id]);
     if (!aluguelReturno) return res.sendStatus(404)
 
   try {
