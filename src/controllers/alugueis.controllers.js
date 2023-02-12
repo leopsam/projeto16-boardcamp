@@ -6,6 +6,7 @@ let data = dayjs().format("YYYY-M-DD")
 export async function criarAluguel(req, res) {
   console.log(data)
   const games = await db.query("SELECT * FROM games")
+  const alugueis = await db.query("SELECT * FROM rentals")
 
   const { customerId, gameId, daysRented } = req.body
   const rentDate = data
@@ -13,13 +14,23 @@ export async function criarAluguel(req, res) {
   const returnDate = null
   const delayFee = null
 
+  let somaStock = 0
+
 
   //if (cpf.length != 11) return res.sendStatus(400)
   //if (isNaN(Number(cpf))) return res.sendStatus(400)
-
+  ///console.log(alugueis.rows)
+  alugueis.rows.map((a)=>{
+    //console.log(a.gameId)
+    //console.log(gameId)
+    if(a.gameId === gameId){
+      somaStock++
+    }
+  })
   
+  if(somaStock > games.rows[gameId-1].stockTotal) return res.sendStatus(400)
   
-  console.log(games.rows[gameId-1].stockTotal)
+  //console.log(games.rows[gameId-1].stockTotal)
   
   if(!games.rows[gameId-1]) return res.sendStatus(400)
   if(games.rows[gameId-1].stockTotal < 0) return res.sendStatus(400)
