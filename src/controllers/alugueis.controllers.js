@@ -130,8 +130,6 @@ console.log(finalResult)
 }
 
 export async function finalizarAluguelPorId(req, res) {
-  console.log('finalizarAluguelPorId')
-
   const { id } = req.params
 
   try {
@@ -165,6 +163,22 @@ export async function finalizarAluguelPorId(req, res) {
 
     if (aluguel.rows.length === 0) return res.sendStatus(404) 
     if (!aluguelReturno) return res.sendStatus(404)
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(404).send(error.message)
+  }
+}
+
+export async function deletarAluguelPorId(req, res) {
+  console.log('deletarAluguelPorId')
+
+  const { id } = req.params
+
+  try {
+    const aluguel = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
+    if (aluguel.rows.length === 0) return res.sendStatus(404) 
+    if (aluguel.rows[0].returnDate === null) return res.sendStatus(400)
 
     res.sendStatus(200);
   } catch (error) {
