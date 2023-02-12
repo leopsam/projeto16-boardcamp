@@ -133,8 +133,11 @@ export async function finalizarAluguelPorId(req, res) {
   console.log('finalizarAluguelPorId')
 
   const { id } = req.params
-  
+
+  try {
     const aluguel = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
+    if (aluguel.rows.length === 0) return res.sendStatus(404)
+    
     const game = await db.query(`SELECT * FROM games WHERE id = $1;`, [aluguel.rows[0].gameId])
     const dataFormatada = (aluguel.rows[0].rentDate.getFullYear() + "-" + ((aluguel.rows[0].rentDate.getMonth() + 1)) + "-" + (aluguel.rows[0].rentDate.getDate() ))  
     const diffInMs   = new Date(dataFormatada) - new Date(data)
@@ -145,10 +148,12 @@ export async function finalizarAluguelPorId(req, res) {
     //console.log(game.rows[0].pricePerDay)
     //console.log(diffInDays)
     //console.log(data)   
+    //console.log(game) 
 
-  try {
+  
     const aluguelReturno = await db.query(`UPDATE rentals SET "returnDate" = '${data}', "delayFee" = '${delayFee}' WHERE id = $1;`, [id])
 
+    //if (!aluguel) return res.sendStatus(404)
     if (aluguel.rows.length === 0) return res.sendStatus(404) 
     if (!aluguelReturno) return res.sendStatus(404)
 
