@@ -172,11 +172,11 @@ export async function finalizarAluguelPorId(req, res) {
 
     console.log(diffInDays)
     console.log(aluguel.rows[0].daysRented)
-    console.log(diasPassados)
+    console.log(diasPassados + " dias passado")
 
     if(diaCerto < diaEntraga){
       console.log("teste")
-      delayFee = diasPassados * game.rows[0].pricePerDay
+      delayFee = game.rows[0].pricePerDay * diasPassados
     }
 
     //console.log(dataFormatadaTwo)    
