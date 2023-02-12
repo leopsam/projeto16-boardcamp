@@ -136,23 +136,56 @@ export async function finalizarAluguelPorId(req, res) {
 
   try {
     const aluguel = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
-    if (aluguel.rows.length === 0) return res.sendStatus(404)
-    //console.log(aluguel.rows[0].returnDate != null)
-    
-    if (aluguel.rows[0].returnDate != null) return res.sendStatus(400)
-    console.log("passou")
+    const date = "2023-2-18"
+
+    if (aluguel.rows.length === 0) return res.sendStatus(404) 
+    //if (aluguel.rows[0].returnDate != null) return res.sendStatus(400) //retirar o comentario depois
 
     const game = await db.query(`SELECT * FROM games WHERE id = $1;`, [aluguel.rows[0].gameId])
-    const dataFormatada = (aluguel.rows[0].rentDate.getFullYear() + "-" + ((aluguel.rows[0].rentDate.getMonth() + 1)) + "-" + (aluguel.rows[0].rentDate.getDate() ))  
-    const diffInMs   = new Date(dataFormatada) - new Date(data)
-    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);   
-    const delayFee = game.rows[0].pricePerDay * diffInDays
 
-    //console.log(delayFee)
-    //console.log(game.rows[0].pricePerDay)
-    //console.log(diffInDays)
-    //console.log(data)   
+
+
+    const diaAludado = (aluguel.rows[0].rentDate.getFullYear() + "-" + ((aluguel.rows[0].rentDate.getMonth() + 1)) + "-" + (aluguel.rows[0].rentDate.getDate()))  
+    const diffInMs   = new Date(date) - new Date(diaAludado)
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);   
+    let delayFee = game.rows[0].pricePerDay * diffInDays
+    const diasPassados = diffInDays - aluguel.rows[0].daysRented
+    //const diaCerto = diaAludado - aluguel.rows[0].daysRented
+    
+    
+    let time = new Date(diaAludado);
+    let entraga = new Date();
+    entraga.setDate(time.getDate() + diffInDays);
+    //console.log(entraga)
+
+    let timeCerto = new Date(diaAludado);
+    let entragaCerto = new Date();
+    entragaCerto.setDate(timeCerto.getDate() + aluguel.rows[0].daysRented);
+    //console.log(entragaCerto)
+
+    const diaCerto = (entragaCerto.getFullYear() + "-" + ((entragaCerto.getMonth() + 1)) + "-" + (entragaCerto.getDate()))
+    const diaEntraga = (entraga.getFullYear() + "-" + ((entraga.getMonth() + 1)) + "-" + (entraga.getDate()))
+
+    console.log(diaAludado)
+    console.log(diaEntraga)
+    console.log(diaCerto)
+
+    console.log(diffInDays)
+    console.log(aluguel.rows[0].daysRented)
+    console.log(diasPassados)
+
+    if(diaCerto < diaEntraga){
+      console.log("teste")
+      delayFee = diasPassados * game.rows[0].pricePerDay
+    }
+
+    //console.log(dataFormatadaTwo)    
+    console.log(delayFee)
+    //console.log(dataFormatada)
+    //console.log(game.rows[0].pricePerDay)    
+    //console.log(new Date(date) + new Date(5))   
     //console.log(game) 
+    //console.log(aluguel.rows[0].returnDate != null)
 
   
     const aluguelReturno = await db.query(`UPDATE rentals SET "returnDate" = '${data}', "delayFee" = '${delayFee}' WHERE id = $1;`, [id])
