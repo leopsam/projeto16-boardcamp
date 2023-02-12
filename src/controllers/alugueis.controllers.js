@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 let data = dayjs().format("YYYY-MM-DD")
 
 export async function criarAluguel(req, res) {
+  console.log(data)
   const games = await db.query("SELECT * FROM games")
 
   const { customerId, gameId, daysRented } = req.body
@@ -66,19 +67,36 @@ export async function buscarAlugueis(req, res) {
     const customers = await db.query("SELECT * FROM customers")
     const alugueis = await db.query("SELECT * FROM rentals")
 
-    console.log(customers.rows.find(c => c.id === alugueis.rows[0].customerId).name)
+    //let dataFormatada = (data.getFullYear() + "-" + ((data.getMonth() + 1)) + "-" + (data.getDate() )) ;  
+
+    //console.log(customers.rows.find(c => c.id === alugueis.rows[0].customerId).name)
 
     const finalResult = alugueis.rows.map(a => ({
-        ...a,
+
+      
+          id: a.id, 
+          customerId: a.customerId,
+          gameId: a.gameId,
+          rentDate: (a.rentDate.getFullYear() + "-" + ((a.rentDate.getMonth() + 1)) + "-" + (a.rentDate.getDate() )),
+          daysRented: a.daysRented,
+          returnDate: a.returnDate,
+          originalPrice: a.originalPrice,
+          delayFee: a.delayFee,
+          /*phone: cliente.rows[0].phone, 
+          cpf: cliente.rows[0].cpf, 
+          birthday: dataFormatada,
+       
+
+        ...a,*/
 
         customer: {
           id: customers.rows.find(c => c.id === a.customerId).id,
-          Name: customers.rows.find(c => c.id === a.customerId).name
+          name: customers.rows.find(c => c.id === a.customerId).name
         },
         
         game: {
           id: customers.rows.find(g => g.id === a.gameId).id,
-          Name: games.rows.find(g => g.id === a.gameId).name,
+          name: games.rows.find(g => g.id === a.gameId).name,
         }      
 
     }))
