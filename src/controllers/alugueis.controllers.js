@@ -139,7 +139,7 @@ export async function finalizarAluguelPorId(req, res) {
     const date = "2023-2-18"
 
     if (aluguel.rows.length === 0) return res.sendStatus(404) 
-    //if (aluguel.rows[0].returnDate != null) return res.sendStatus(400) //retirar o comentario depois
+    if (aluguel.rows[0].returnDate != null) return res.sendStatus(400) //retirar o comentario depois
 
     const game = await db.query(`SELECT * FROM games WHERE id = $1;`, [aluguel.rows[0].gameId])
 
